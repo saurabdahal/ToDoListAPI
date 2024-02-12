@@ -35,5 +35,22 @@ namespace ToDoListWebAPI.Controllers
 
             return Ok(toDoItem);
         }
+
+        [HttpPost("/")]
+        public async Task<ActionResult<ToDoItem>> CreateToDoItem(ToDoItem toDoItem)
+        {
+            // Validate the input model
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Add the new ToDoItem to the database
+            todocontext.ToDoItems.Add(toDoItem);
+            await todocontext.SaveChangesAsync();
+
+            // Return the newly created ToDoItem
+            return CreatedAtAction(nameof(GetToDoItemById), new { id = toDoItem.Id }, toDoItem);
+        }
     }
 }
