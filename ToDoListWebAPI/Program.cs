@@ -1,6 +1,13 @@
+using ToDoListWebAPI.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+
+builder.Services.AddDbContext<ToDoDbContext>(options =>
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -17,8 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
-app.UseAuthorization();
 
 app.MapControllers();
 
