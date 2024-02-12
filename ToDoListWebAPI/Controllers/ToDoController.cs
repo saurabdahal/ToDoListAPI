@@ -17,7 +17,7 @@ namespace ToDoListWebAPI.Controllers
         public async Task<ActionResult<IEnumerable<ToDoItem>>> GetToDoItems()
         {
             // Retrieve ToDoItems with no CompletedDate set
-            var toDoItems = await todocontext.ToDoItems.Where(item => item.CompletedDate == null).ToListAsync();
+            List<ToDoItem> toDoItems = await todocontext.ToDoItems.Where(item => item.CompletedDate == null).ToListAsync();
 
             return Ok(toDoItems);
         }
@@ -26,7 +26,7 @@ namespace ToDoListWebAPI.Controllers
         public async Task<ActionResult<ToDoItem>> GetToDoItemById(int id)
         {
             // Retrieve ToDoItem based on the provided Id
-            var toDoItem = await todocontext.ToDoItems.FindAsync(id);
+            ToDoItem toDoItem = await todocontext.ToDoItems.FindAsync(id);
 
             if (toDoItem == null)
             {
@@ -39,11 +39,6 @@ namespace ToDoListWebAPI.Controllers
         [HttpPost("/")]
         public async Task<ActionResult<ToDoItem>> CreateToDoItem(ToDoItem toDoItem)
         {
-            // Validate the input model
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
 
             // Add the new ToDoItem to the database
             todocontext.ToDoItems.Add(toDoItem);
@@ -56,7 +51,6 @@ namespace ToDoListWebAPI.Controllers
         [HttpPost("{id}/complete")]
         public async Task<ActionResult<ToDoItem>> MarkToDoItemAsCompleted(int id)
         {
-            Console.WriteLine("at least here");
             // Find the ToDoItem with the specified Id
             var toDoItem = await todocontext.ToDoItems.FindAsync(id);
 
