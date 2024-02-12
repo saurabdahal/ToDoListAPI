@@ -52,5 +52,29 @@ namespace ToDoListWebAPI.Controllers
             // Return the newly created ToDoItem
             return CreatedAtAction(nameof(GetToDoItemById), new { id = toDoItem.Id }, toDoItem);
         }
+
+        [HttpPost("{id}/complete")]
+        public async Task<ActionResult<ToDoItem>> MarkToDoItemAsCompleted(int id)
+        {
+            Console.WriteLine("at least here");
+            // Find the ToDoItem with the specified Id
+            var toDoItem = await todocontext.ToDoItems.FindAsync(id);
+
+            // If ToDoItem is not found, return 404 Not Found
+            if (toDoItem == null)
+            {
+                return NotFound();
+            }
+
+            // Update the CompletedDate with the current datetime
+            toDoItem.CompletedDate = DateTime.Now;
+
+            // Update the ToDoItem in the database
+            todocontext.Entry(toDoItem).State = EntityState.Modified;
+            await todocontext.SaveChangesAsync();
+
+            // Return the updated ToDoItem
+            return Ok(toDoItem);
+        }
     }
 }
