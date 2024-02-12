@@ -21,5 +21,19 @@ namespace ToDoListWebAPI.Controllers
 
             return Ok(toDoItems);
         }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ToDoItem>> GetToDoItemById(int id)
+        {
+            // Retrieve ToDoItem based on the provided Id
+            var toDoItem = await todocontext.ToDoItems.FindAsync(id);
+
+            if (toDoItem == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(toDoItem);
+        }
     }
 }
